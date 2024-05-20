@@ -1,0 +1,55 @@
+/* Building styles */
+.building {
+    width: 400px;
+    height: 600px;
+    background-color: #ccc;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 50px;
+  }
+  
+  .floor {
+    height: 110px;
+    background: url('help/floor.jpg') repeat;
+  }
+  
+  .blackline {
+    height: 7px;
+    background-color: #000000;
+  }
+  
+  /* Elevator styles */
+  .elevator {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+  }
+  
+  .elevator img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .display {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 20px;
+  }
+  
+  /* Elevator buttons */
+  .metal.linear.floor {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    margin: 5px;
+  }
+  

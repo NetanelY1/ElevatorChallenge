@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Elevator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            align-items: flex-end;
+            height: 100%;
+        }
+        .building {
+            display: grid;
+            grid-template-rows: repeat(25, 1fr); /* 25 קומות כולל קומה 0 */
+            width: 150px;
+            border: 2px solid #333;
+            background-color: #fff;
+            position: relative;
+            overflow: hidden;
+            height: 750px; /* גובה מתאים לכל הקומות */
+        }
+        .floor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            position: relative;
+            height: 30px;
+            padding: 0 5px;
+        }
+        .floor:last-child {
+            border-bottom: none;
+        }
+        .button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .button:hover {
+            background-color: #555;
+        }
+        .elevator {
+            width: 80px;
+            height: 30px;
+            background-color: #333;
+            text-align: center;
+            line-height: 30px;
+            position: absolute;
+            bottom: 0;
+            transition: bottom 0.5s; /* מהירות תנועה חצי שנייה לכל קומה */
+        }
+        .elevator img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #elevator1 {
+            left: 160px; /* מקם את המעלית הראשונה ליד הבניין */
+        }
+        #elevator2 {
+            left: 250px; /* מקם את המעלית השנייה ליד הבניין */
+        }
+        #elevator3 {
+            left: 340px; /* מקם את המעלית השלישית ליד הבניין */
+        }
+        .arrival-time {
+            font-size: 0.8em;
+            color: #333;
+        }
+        .countdown {
+            font-size: 0.8em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="building">
+            <!-- יצירת קומות הבניין -->
+            <!-- לולאה ליצירת 25 קומות כולל קומה 0 -->
+            <script>
+                for (let i = 24; i >= 0; i--) {
+                    document.write(`
+                        <div class="floor">
+                            <span>קומה ${i}</span>
+                            <button class="button" onclick="callElevator(${i}, this)">הזמן מעלית ${i}</button>
+                            <span class="arrival-time" id="arrival-time-${i}"></span>
+                            <span class="countdown" id="countdown-${i}"></span>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+        <div class="elevator" id="elevator1"><img src="elevator_icon.png" alt="מעלית"></div>
+        <div class="elevator" id="elevator2"><img src="elevator_icon.png" alt="מעלית"></div>
+        <div class="elevator" id="elevator3"><img src="elevator_icon.png" alt="מעלית"></div>
+    </div>
+
+    <script>
+        function callElevator(targetFloor, buttonElement) {
+            const elevators = [
+                { element: document.getElementById('elevator1'), floor: parseInt(document.getElementById('elevator1').style.bottom) / 30 || 0 },
+                { element: document.getElementById('elevator2'), floor: parseInt(document.getElementById('elevator2').style.bottom) / 30 || 0 },
+                { element: document.getElementById('elevator3'), floor: parseInt(document.getElementById('elevator3').style.bottom) / 30 || 0 }
+            ];
+            const floorHeight = 30; // גובה כל קומה בפיקסלים
+            const travelTimePerFloor = 0.5; // זמן תנועה לכל קומה בשניות
+
+            // מצא את המעלית הקרובה ביותר
+            let closestElevator = elevators[0];
+            let minDistance = Math.abs(elevators[0].floor - targetFloor);
+
+            for (let i = 1; i < elevators.length; i++) {
+                const distance = Math.abs(elevators[i].floor - targetFloor);
+                if (distance < minDistance) {
+                    closestElevator = elevators[i];
+                    minDistance = distance;
+                }
+            }
+
+            // חישוב זמן ההגעה
+            const travelTime = minDistance * travelTimePerFloor;
+            const arrivalTimeElement = document.getElementById(`arrival-time-${targetFloor}`);
+            arrivalTimeElement.innerText = `זמן הגעה משוער: ${travelTime.toFixed(1)} שניות`;
+
+            // זמן נותר עד ההגעה
+            let countdown = travelTime;
+            const countdownElement = document.getElementById(`countdown-${targetFloor}`);
+            countdownElement.innerText = `זמן נותר עד ההגעה: ${countdown.toFixed(1)} שניות`;
+
+            // כל שנייה עדכון של הזמן נותר
+            const countdownInterval = setInterval(() => {
+                countdown -= 0.1;
+                countdownElement.innerText = `זמן נותר עד ההגעה: ${countdown.toFixed(1)} שניות`;
+
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 100); // כל 0.1 שניות (100 מילישניות)
+
+            // הזז את המעלית הקרובה ביותר
+            const targetBottom = targetFloor * floorHeight;
+            closestElevator.element.style.transitionDuration = `${travelTime}s`; // קביעת מהירות התנועה
+            closestElevator.element.style.bottom = `${targetBottom}px`;
+            closestElevator.floor = targetFloor; // עדכן את הקומה הנוכחית של המעלית
+        }
+    </script>
+</body>
+</html>

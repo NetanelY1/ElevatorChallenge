@@ -1,4 +1,12 @@
 
+.building {
+  width: 400px;
+  height: 600px;
+  background-color: #ccc;
+  position: static;
+  margin: 0 auto;
+  margin-top: 50px;
+}
 .floor {
   background-color: silver;
   background-image: linear-gradient(335deg, #b00 23px, transparent 23px), 

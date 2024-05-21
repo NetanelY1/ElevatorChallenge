@@ -1,3 +1,5 @@
+// from GPT:
+
 class Elevator {
   private currentFloor: number = 0;
   private isMoving: boolean = false;
